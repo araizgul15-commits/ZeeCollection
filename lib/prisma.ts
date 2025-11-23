@@ -1,11 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 
-// Fix: Use globalThis for singleton instantiation in Next.js
-declare global {
-  // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
-}
-
 export const prisma =
   globalThis.prisma ??
   new PrismaClient({
