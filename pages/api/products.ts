@@ -6,7 +6,11 @@ const ADMIN_SECRET = process.env.ADMIN_SECRET || "ZeeCollection_PLACEHOLDER_Chan
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     const products = await prisma.product.findMany({ orderBy: { createdAt: "desc" } });
-    return res.status(200).json({ products });
+    const productsWithParsedSizes = products.map(p => ({
+      ...p,
+      sizes: JSON.parse(p.sizes)
+    }));
+    return res.status(200).json({ products: productsWithParsedSizes });
   }
 
   // Admin-only actions (create/delete) protected by x-admin-secret header
@@ -26,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         description: description || "",
         imageUrl: imageUrl || "",
         priceCents,
-        sizes: sizes || []
+        sizes: JSON.stringify(sizes || [])
       }
     });
     return res.status(201).json({ product });
