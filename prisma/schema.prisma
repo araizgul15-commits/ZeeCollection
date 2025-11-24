@@ -13,7 +13,7 @@ model Product {
   description String?
   imageUrl    String?
   priceCents  Int
-  sizes       String[]  @default([])
+  sizes       String   @default("[]")
   createdAt   DateTime @default(now())
 }
 
